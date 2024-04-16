@@ -11,7 +11,7 @@ class Transaction < ApplicationRecord
     points = amount / 100
     points *= 2 if foreign_transaction?
     user.update_points(points)
-    user.check_rewards_eligibility(points)
     user.update_monthly_points(created_at.month)
+    user.check_rewards_eligibility(points)
   end
 end

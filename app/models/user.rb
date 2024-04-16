@@ -5,7 +5,7 @@ class User < ApplicationRecord
   enum tier: { standard: 0, gold: 1, platinum: 2 }
 
   def birthday_month
-    birthday.month
+    birthday&.month
   end
 
   def update_points(points)
@@ -37,7 +37,7 @@ class User < ApplicationRecord
 
   def update_monthly_points(month)
     transactions_this_month = transactions.in_month(month)
-    monthly_points = transactions_this_month.sum(&:points)
+    monthly_points = transactions_this_month.sum(:amount) / 100 # Divide by 100 to get points
     update(monthly_points: monthly_points)
     check_free_coffee_reward(monthly_points)
   end

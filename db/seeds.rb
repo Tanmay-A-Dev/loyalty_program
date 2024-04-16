@@ -8,37 +8,51 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-# Create users
-user1 = User.create(name: "Tanmay")
-user2 = User.create(name: "Tom")
+# db/seeds.rb
 
-# Create transactions for user1
-user1.transactions.create(amount: 150, foreign_transaction: false)
-user1.transactions.create(amount: 200, foreign_transaction: true)
-user1.transactions.create(amount: 80, foreign_transaction: false)
-user1.transactions.create(amount: 120, foreign_transaction: false)
-user1.transactions.create(amount: 300, foreign_transaction: true)
+# Create users with different scenarios for testing loyalty rules
 
-# Create transactions for user2
-user2.transactions.create(amount: 100, foreign_transaction: false)
-user2.transactions.create(amount: 250, foreign_transaction: false)
-user2.transactions.create(amount: 90, foreign_transaction: true)
-user2.transactions.create(amount: 150, foreign_transaction: false)
-user2.transactions.create(amount: 180, foreign_transaction: true)
+# User 1: Standard tier with points expiring soon
+user1 = User.create(name: 'John', points: 500, points_expiration: Date.today + 6.months)
 
-# Create rewards for user1
+# User 2: Gold tier with upcoming points expiration
+user2 = User.create(name: 'Alice', points: 1200, tier: :gold, points_expiration: Date.today + 9.months)
+
+# User 3: Platinum tier with points expiring far in the future
+user3 = User.create(name: 'Bob', points: 6000, tier: :platinum, points_expiration: Date.today + 2.years)
+
+# User 4: New user with first transaction date and birthday in current month
+user4 = User.create(name: 'Eva', first_transaction_date: Date.today - 10.days, birthday: Date.today)
+
+# Create transactions for users
+
+# Transactions for user1
+user1.transactions.create(amount: 500) # This transaction adds 5 points
+user1.transactions.create(amount: 1500, foreign_transaction: true) # This transaction adds 30 points (2x points for foreign transaction)
+
+# Transactions for user2
+user2.transactions.create(amount: 200) # This transaction adds 2 points
+user2.transactions.create(amount: 1000) # This transaction adds 10 points
+user2.transactions.create(amount: 1500) # This transaction adds 15 points
+user2.transactions.create(amount: 3000) # This transaction adds 30 points
+
+# Transactions for user3
+user3.transactions.create(amount: 500) # This transaction adds 5 points
+
+# Transactions for user4
+user4.transactions.create(amount: 1000) # This transaction adds 10 points
+user4.transactions.create(amount: 1500) # This transaction adds 15 points
+user4.transactions.create(amount: 3000) # This transaction adds 30 points
+user4.transactions.create(amount: 2500) # This transaction adds 25 points
+
+# Reward for user1 (Standard tier)
 user1.rewards.create(name: 'Free Coffee')
-user1.rewards.create(name: '5% Cash Rebate')
 
-# Create rewards for user2
-user2.rewards.create(name: 'Free Coffee')
-user2.rewards.create(name: 'Free Movie Tickets')
+# Reward for user2 (Gold tier)
+user2.rewards.create(name: 'Free Coffee (Birthday)')
+user2.rewards.create(name: '4x Airport Lounge Access')
 
-# Display seed data
-puts "Seed data created successfully:"
-puts "Users:"
-puts User.pluck(:name).join(", ")
-puts "Transactions:"
-puts Transaction.pluck(:amount).join(", ")
-puts "Rewards:"
-puts Reward.pluck(:name).join(", ")
+# Reward for user3 (Platinum tier)
+user3.rewards.create(name: 'Free Coffee (Birthday)')
+user3.rewards.create(name: '4x Airport Lounge Access')
+user3.rewards.create(name: 'Free Movie Tickets')
