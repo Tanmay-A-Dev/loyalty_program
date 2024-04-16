@@ -1,0 +1,14 @@
+<h1>My Rewards</h1>
+<ul>
+  <% @rewards.each do |reward| %>
+    <li>
+      <%= reward.name %>
+      <% if reward.claimed_at %>
+        (Claimed)
+      <% else %>
+        <%= link_to 'Claim', claim_user_reward_path(@user, reward), data: { confirm: 'Are you sure?', turbo_method: 'post' } %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>
+<%= link_to 'Back', user_path(@user) %>

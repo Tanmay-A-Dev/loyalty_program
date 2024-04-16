@@ -2,8 +2,8 @@ class CreateRewards < ActiveRecord::Migration[7.1]
   def change
     create_table :rewards do |t|
       t.references :user, null: false, foreign_key: true
-      t.decimal :amount, precision: 10, scale: 2
-      t.boolean :foreign_transaction, default: false
+      t.string :name
+      t.datetime :claimed_at
 
       t.timestamps
     end
