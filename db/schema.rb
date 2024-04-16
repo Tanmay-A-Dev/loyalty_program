@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_16_061448) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_16_113403) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -38,6 +38,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_16_061448) do
     t.integer "tier", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.date "birthday"
+    t.datetime "first_transaction_date"
+    t.integer "monthly_points"
+    t.date "points_expiration"
   end
 
   add_foreign_key "rewards", "users"

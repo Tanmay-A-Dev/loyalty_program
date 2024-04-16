@@ -17,11 +17,22 @@ class User < ApplicationRecord
     transactions.order(created_at: :asc).first.created_at
   end
 
+  def expire_points
+    update(points: 0, points_expiration: Date.today + 1.year)
+  end
+
+  def update_tier
+    update(tier: :gold) if points >= 1000
+    update(tier: :platinum) if points >= 5000
+  end
+
   def check_rewards_eligibility(points)
     check_free_coffee_reward(points)
     check_free_coffee_birthday_reward
     check_cash_rebate_reward
     check_free_movie_tickets_reward
+    check_gold_tier_reward
+    check_quarterly_bonus_points
   end
 
   def update_monthly_points(month)
@@ -55,6 +66,21 @@ class User < ApplicationRecord
   def check_free_movie_tickets_reward
     if transactions.where('created_at >= ? AND amount > ?', first_transaction_date + 60.days, 1000).exists?
       rewards.create(name: 'Free Movie Tickets')
+    end
+  end
+
+  def check_gold_tier_reward
+    if tier_changed? && tier == 'gold'
+      rewards.create(name: '4x Airport Lounge Access')
+    end
+  end
+
+  def check_quarterly_bonus_points
+    quarter_start_date = Date.today.beginning_of_quarter
+    quarter_end_date = Date.today.end_of_quarter
+    total_spending_in_quarter = transactions.where(created_at: quarter_start_date..quarter_end_date).sum(:amount)
+    if total_spending_in_quarter > 2000
+      update_points(100)
     end
   end
 end

@@ -1,2 +1,11 @@
-<h1><%= @user.name %></h1>
-<%= link_to 'Back', users_path %>
+<h1>User Profile</h1>
+<p><strong>Name:</strong> <%= @user.name %></p>
+<p><strong>Email:</strong> <%= @user.email %></p>
+<p><strong>Points:</strong> <%= @user.points %></p>
+<p><strong>Points Expiration:</strong> <%= @user.points_expiration %></p>
+<% if @user.tier == 'gold' %>
+  <p>Congratulations! You have unlocked the Airport Lounge Access reward.</p>
+<% end %>
+<% if @quarterly_bonus_points_earned %>
+  <p>Congratulations! You've earned 100 bonus points for spending greater than $2000 in this quarter.</p>
+<% end %>
