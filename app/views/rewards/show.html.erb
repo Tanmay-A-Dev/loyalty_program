@@ -1,0 +1,4 @@
+<h1>Reward Details</h1>
+<p><strong>Name:</strong> <%= @reward.name %></p>
+<p><strong>Claimed:</strong> <%= @reward.claimed_at ? 'Yes' : 'No' %></p>
+<%= link_to 'Back', user_rewards_path(@reward.user) %>
